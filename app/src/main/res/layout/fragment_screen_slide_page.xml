@@ -1,0 +1,95 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/product_name"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/product_rating_tv"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:text="@string/product_avg_rating"
+                android:paddingEnd="4dp"
+                android:paddingRight="4dp"/>
+
+
+            <TextView
+                android:id="@+id/product_rating"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:paddingEnd="12dp"
+                android:paddingRight="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating_count_tv"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:text="@string/rating_count_tv"
+                android:paddingEnd="4dp"
+                android:paddingRight="4dp"/>
+
+            <TextView
+                android:id="@+id/product_rating_count"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+
+
+        <ImageView
+            android:layout_width="344dp"
+            android:layout_height="288dp"
+            android:gravity="center_horizontal"
+            android:id="@+id/imageV"/>
+        <TextView
+            android:id="@+id/product_price"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"/>
+            </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

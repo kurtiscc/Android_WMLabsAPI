@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SamsTech Test</string>
+    <string name="action_view">View</string>
+    <string name="title_product_details">Screen Slide</string>
+    <string name="product_avg_rating">Avg. Rating: </string>
+    <string name="rating_count_tv">Reviews: </string>
+
+
+
+</resources>
