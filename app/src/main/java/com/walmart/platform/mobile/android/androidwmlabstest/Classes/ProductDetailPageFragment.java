@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.walmart.platform.mobile.android.androidwmlabstest.Data.Model.Product;
 import com.walmart.platform.mobile.android.androidwmlabstest.R;
 
 /**
@@ -18,36 +17,29 @@ import com.walmart.platform.mobile.android.androidwmlabstest.R;
  */
 
 public class ProductDetailPageFragment extends Fragment {
-
-    private Product product;
-
-    public ProductDetailPageFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setHasOptionsMenu(true);
-        Bundle bundle = getArguments();
-        product = bundle.getParcelable("product-details");
-    }
+    //public static final ImageView productImage = null;
+    public static final String productName = "name";
+    public static final String productPrice = "price";
+    public static final String productRating = "rating";
+    public static final String productReviewCount = "reviewCount";
+    public static final String productImage = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ViewGroup rootView = (ViewGroup) inflater
+        View rootView = inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
-        setHasOptionsMenu(true);
-        ImageView img = (ImageView) rootView.findViewById(R.id.imageV);
-            Context mContext = getActivity().getApplicationContext();
 
-            ((TextView) rootView.findViewById(R.id.product_name)).setText(product.getProductName());
-            Picasso.with(mContext).load(product.getProductImage()).into(img);
-            ((TextView) rootView.findViewById(R.id.product_rating)).setText(String.valueOf(product.getReviewRating()));
-            ((TextView) rootView.findViewById(R.id.product_price)).setText(product.getPrice());
-            ((TextView) rootView.findViewById(R.id.product_rating_count)).setText(String.valueOf(product.getReviewCount()));
+        ((TextView) rootView.findViewById(R.id.product_name)).setText(getArguments().getString(productName));
+        ((TextView) rootView.findViewById(R.id.product_price)).setText(getArguments().getString(productPrice));
+        ((TextView) rootView.findViewById(R.id.product_rating)).setText(getArguments().getString(productRating));
+        ((TextView) rootView.findViewById(R.id.product_rating_count)).setText(getArguments().getString(productReviewCount));
+        ImageView img = (ImageView) rootView.findViewById(R.id.imageV);
+        Context mContext = getActivity().getApplicationContext();
+        Picasso.with(mContext).load(getArguments().getString(productImage)).into(img);
 
         return rootView;
+
     }
 }

@@ -2,6 +2,10 @@ package com.walmart.platform.mobile.android.androidwmlabstest;
 
 import android.content.Intent;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,13 +28,15 @@ import com.walmart.platform.mobile.android.androidwmlabstest.utils.PaginationAda
 import com.walmart.platform.mobile.android.androidwmlabstest.utils.ScrollListener;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static java.security.AccessController.getContext;
 
-public class MainActivity extends AppCompatActivity implements PaginationAdapterCallback{
+public class MainActivity extends FragmentActivity implements PaginationAdapterCallback{
 
     private static final String TAG = "MainActivity";
 
@@ -65,15 +71,19 @@ public class MainActivity extends AppCompatActivity implements PaginationAdapter
         progressBar = (ProgressBar) findViewById(R.id.progrss_bar);
         mAPIService = ApiUtils.getAPIService();
 
+
         mAdapter = new ProductsAdapter(this, new ProductsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Product product) {
-                Intent intent = new Intent(MainActivity.this, ProductDetailsPagerActivity.class);
+            public void onItemClick(Product product, int position) {
+                ArrayList<Product> productResultsList = mAdapter.getmProducts();
+                ProductDetailsPagerActivity pagerActivity = new ProductDetailsPagerActivity();
                 Bundle extras = new Bundle();
-                extras.putParcelable("product-details", product);
-                extras.putString("current-page", String.valueOf(currPage));
-                intent.putExtras(extras);
-                startActivity(intent);
+                extras.putParcelableArrayList("product-details", productResultsList );
+                extras.putInt("curr-position", position);
+                pagerActivity.setArguments(extras);
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction ft = fragmentManager.beginTransaction();
+                ft.replace(R.id.container, pagerActivity, "swipe_view_fragment").commit();
 //                Toast.makeText(MainActivity.this, "Item Clicked", Toast.LENGTH_LONG).show();
             }
         });
@@ -161,6 +171,17 @@ public class MainActivity extends AppCompatActivity implements PaginationAdapter
                 Log.e(TAG, "Unable to submit get request to API.");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag("swipe_view_fragment");
+        if(f!=null){
+            fm.beginTransaction().remove(f).commit();
+        }else{
+            super.onBackPressed();
+        }
     }
 
 }

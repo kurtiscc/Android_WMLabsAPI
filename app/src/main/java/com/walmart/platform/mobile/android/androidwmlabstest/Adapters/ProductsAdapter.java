@@ -30,10 +30,10 @@ import java.util.List;
 public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnItemClickListener {
-        void onItemClick(Product product);
+        void onItemClick(Product product, int position);
     }
 
-    private List<Product> productResults;
+    private ArrayList<Product> productResults;
     private final OnItemClickListener listener;
     // private PostProductListener mProductListener;
     private Context mContext;
@@ -50,11 +50,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         productResults = new ArrayList<>();
     }
 
-    public List<Product> getmProducts() {
+    public ArrayList<Product> getmProducts() {
         return productResults;
     }
 
-    public void setmProducts(List<Product> mProducts) {
+    public void setmProducts(ArrayList<Product> mProducts) {
         this.productResults = mProducts;
     }
 
@@ -75,7 +75,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Product product = productResults.get(position); // Product
         final ProductVH productVH = (ProductVH) holder;
 
-        productVH.bind(productVH, product, listener);
+        productVH.bind(productVH, product, listener, position);
     }
 
     private DrawableRequestBuilder<String> loadImage(@NonNull String posterPath) {
@@ -142,7 +142,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mProgress = (ProgressBar) itemView.findViewById(R.id.product_progress);
         }
 
-        public void bind(final ProductVH productVH, final Product product, final OnItemClickListener listener) {
+        public void bind(final ProductVH productVH, final Product product, final OnItemClickListener listener, final int position) {
 
             productVH.mProductNameTV.setText(product.getProductName());
             //productVH.mProductDescTV.setText(product.getShortDescription());
@@ -165,7 +165,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     .into(productVH.mProductImg);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    listener.onItemClick(product);
+                    listener.onItemClick(product, position);
                 }
             });
 

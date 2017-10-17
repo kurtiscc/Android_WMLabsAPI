@@ -1,73 +1,41 @@
 package com.walmart.platform.mobile.android.androidwmlabstest.Classes;
 
-import android.nfc.Tag;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-
-import com.walmart.platform.mobile.android.androidwmlabstest.Data.Model.GetProducts;
 import com.walmart.platform.mobile.android.androidwmlabstest.Data.Model.Product;
-import com.walmart.platform.mobile.android.androidwmlabstest.Data.Model.Remote.APIService;
-import com.walmart.platform.mobile.android.androidwmlabstest.Data.Model.Remote.ApiUtils;
 import com.walmart.platform.mobile.android.androidwmlabstest.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by kchris6 on 10/2/17.
  */
 
-public class ProductDetailsPagerActivity  extends FragmentActivity {
+public class ProductDetailsPagerActivity  extends Fragment {
 
-    private static final String TAG = "ProductDetailPager";
-
-
-    private ViewPager mPager;
-    private Product product;
-    private APIService mAPIService;
-    private int currPage;
-
+    private int currPosition;
+    private ArrayList<Product> products;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screen_slide);
-        mAPIService = ApiUtils.getAPIService();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_screen_slide, container, false);
+        ViewPager mViewPager = (ViewPager) v.findViewById(R.id.pager);
+        currPosition = getArguments().getInt("curr-position");
+        products = getArguments().getParcelableArrayList("product-details");
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            product = extras.getParcelable("product-details");
-            currPage = Integer.parseInt(extras.getString("current-page"));
-
-        }
-
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        PagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), product);
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(mPager.getCurrentItem());
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-        }
+        ScreenSlidePagerAdapter screenSlidePagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager(), products);
+        mViewPager.setAdapter(screenSlidePagerAdapter);
+        mViewPager.setCurrentItem(currPosition);
+        return v;
     }
 
     /**
@@ -75,51 +43,30 @@ public class ProductDetailsPagerActivity  extends FragmentActivity {
      * sequence.
      */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        private Product product;
+        private List<Product> products;
 
-        private ScreenSlidePagerAdapter(FragmentManager fm, Product data) {
+        private ScreenSlidePagerAdapter(FragmentManager fm, List<Product> products) {
             super(fm);
-            this.product = data;
+            this.products = products;
         }
 
         @Override
-        public Fragment getItem(final int position) {
-            ProductDetailPageFragment productDetailPageFragment = null;
-               //if (position <= 1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("product-details", product);
-                    productDetailPageFragment = new ProductDetailPageFragment();
-                    productDetailPageFragment.setArguments(bundle);
-//               }
-//                else {
-//                   mAPIService.postRequest(Constants.API_KEY,currPage,Constants.PAGE_SIZE).enqueue(new Callback<GetProducts>() {
-//                       @Override
-//                       public void onResponse(Call<GetProducts> call, Response<GetProducts> response) {
-//                           if (response.isSuccessful()) {
-//                               ProductDetailPageFragment productDetailPageFragment = new ProductDetailPageFragment();
-//                               ArrayList<Product> productsArray = (ArrayList<Product>) response.body().getProducts();
-//                               for (int i = 0; i < productsArray.size(); i++) {
-//                                   Bundle bundle = new Bundle();
-//                                   bundle.putParcelable("product-details", productsArray.get(i));
-//                                   productDetailPageFragment.setArguments(bundle);
-//                               }
-//                           } else Log.d("failed response", String.valueOf(response.code()));
-//                       }
-//
-//                       @Override
-//                       public void onFailure(Call<GetProducts> call, Throwable t) {
-//                           Log.i(TAG, "Unable to submit request to API.");
-//                       }
-//                   });
-//                }
-            return productDetailPageFragment;
+        public Fragment getItem(int position) {
+            Fragment fragment = new ProductDetailPageFragment();
+            Bundle args = new Bundle();
+            args.putString(ProductDetailPageFragment.productName, products.get(position).getProductName());
+            args.putString(ProductDetailPageFragment.productPrice, products.get(position).getPrice());
+            args.putString(ProductDetailPageFragment.productRating, String.valueOf(products.get(position).getReviewRating()));
+            args.putString(ProductDetailPageFragment.productReviewCount, String.valueOf(products.get(position).getReviewCount()));
+            args.putString(ProductDetailPageFragment.productImage, products.get(position).getProductImage());
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override
         public int getCount() {
-            return Constants.TOTAL_ITEMS;
+            return products.size();
         }
-
     }
 }
 
